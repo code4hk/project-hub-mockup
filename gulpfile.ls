@@ -23,10 +23,10 @@ gulp.task 'assets', ->
     .pipe gulp.dest "#{build_path}/assets"
 
 gulp.task 'json', ->
-  gulp.src 'livescripts/project-list.ls'
-    .pipe gulp-livescript({+json, +bare}).on 'error', gulp-util.log
+  gulp.src 'livescripts/project-list.json'
     .pipe gulp.dest "#{build_path}/json/"
 
+    /*.pipe gulp-livescript({+json, +bare}).on 'error', gulp-util.log*/
 gulp.task 'server', ->
   app.use connect-livereload!
   app.use express.static path.resolve "#{build_path}"
@@ -38,7 +38,8 @@ gulp.task 'watch', ->
   gulp.watch 'sass/*.sass', <[sass]> .on \change, gulp-livereload.changed
   gulp.watch 'views/*.jade', <[jade]> .on \change, gulp-livereload.changed
   gulp.watch 'assets/**/*', <[assets]> .on \change, gulp-livereload.changed
-  gulp.watch 'livescripts/project-list.ls', <[json]> .on \change, gulp-livereload.changed
+  /*gulp.watch 'livescripts/project-list.ls', <[json]> .on \change, gulp-livereload.changed*/
+  gulp.watch 'livescripts/project-list.json', <[json]> .on \change, gulp-livereload.changed
 
 gulp.task 'build', <[jade sass json assets]>
 gulp.task 'dev', <[build server watch]>
