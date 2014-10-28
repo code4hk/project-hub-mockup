@@ -1,5 +1,5 @@
 require! <[node-trello fs]>
-
+//TODO externalize token//
 t = new node-trello "1c646bd5d51e2d7111f552b4729e8763"
 
 cardPrefix = '### ---Code4hk Project Meta---'
@@ -7,7 +7,7 @@ descPrefix = '\n- Desc';
 hackpadPrefix = '\n- Hackpad';
 githubPrefix = '\n- Github'
 archievementPrefix = '\n- Product'
-archievementWebPrefix = '\n- Web'
+archievementWebPrefix = '- Web'
 
 
 
@@ -19,7 +19,8 @@ parseMeta = (desc, prefix, isList) ->
     metaDesc = desc.substring (prefixIndex)
     if isList
        end = (metaDesc.indexOf '\n-', prefix.length)
-       metaDesc = metaDesc.substring (metaDesc.indexOf '\n -' , prefix.length)+1, end
+       metaDesc = metaDesc.substring (metaDesc.indexOf '\n -' , prefix.length)+2, end
+       console.log metaDesc
        metaData = [parseMeta metaDesc, archievementWebPrefix]
     else
        end =  (metaDesc.indexOf '\n', prefix.length)
@@ -27,7 +28,7 @@ parseMeta = (desc, prefix, isList) ->
          metaData = metaDesc.substring prefix.length+2
        else
          metaData = metaDesc.substring prefix.length+2, end
-    metaData
+  metaData
 
 parseTrelloCard = (data) ->
   name = data.name

@@ -24,6 +24,6 @@ branches:
 env:
   global:
     - REPO="git@github.com:code4hk/project-hub-mockup"
-    - secure: "KHLPGIR9cXAVfVxuWns8JbCxjs8tch6OlQZtZMszEVJimK9U5cjPOyDLcwx25kuwvcgm/7zfyOLWQbJpkjteROE1BixyRVu8fEwX/kkxnokIWvjykz6Txn9NDjn3ulicjKELueJu+l5NmjGL0gf1dcHBGNCso72iam1K3tsPto4="
+    - secure: "W1V+UbDUV/FYUdlAAjiF8alLR4QH6vReFIzixZNNmAOnS97LzPT+1s8xtCBRNaKV+HA9hdDPQmD3o70ONpttp2xbpvpFh0w52kMjVm2kqHoJnIw5mOdkjMqmes2eijNznkmtYwk+9FAv1KfWyUukhaSCDdVa5PZ+Jax6p8WanXI="
 
 after_success: .travis/after_success.sh
