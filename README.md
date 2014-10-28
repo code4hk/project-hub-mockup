@@ -32,6 +32,10 @@ Structure
 * sass
 * views
 
+Trello Plugin
+=============
+run `lsc livescripts/trello-plugin.ls` to generate project list
+
 Fire.app
 ============
 
