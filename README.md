@@ -1,11 +1,5 @@
-g0v project hub mockup
-==================
-
-mockups for the new g0v project hub
-
-how to join: http://g0v.github.io/project-hub-mockup/about
-
-doc and discussion: http://g0v.github.io/project-hub-mockup/wiki
+Code4HK project hub
+- based on g0v project hub
 
 license: CC0
 

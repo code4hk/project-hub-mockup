@@ -332,8 +332,9 @@ block script
         $("#"+current_url).fadeIn();
       };
       var update_url = function(current_view){
+        
         //history.pushState( {}, current_view + '| g0v project hub mockup', '/' + current_view );
-        history.pushState( {}, current_view + '| g0v project hub mockup', '/project-hub-mockup/' + current_view );
+        history.pushState( {}, current_view + '| CODE4HK project hub', '/project-hub-mockup/' + current_view );
       };
       //$.each( ["submit", "edit", "about"], function(view_index, view_value){
       $.each( ["wiki", "about"], function(view_index, view_value){

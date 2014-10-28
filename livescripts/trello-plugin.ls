@@ -3,79 +3,56 @@ require! <[node-trello fs]>
 t = new node-trello "1c646bd5d51e2d7111f552b4729e8763"
 
 cardPrefix = '### ---Code4hk Project Meta---'
+descPrefix = '\n- Desc';
 hackpadPrefix = '\n- Hackpad';
 githubPrefix = '\n- Github'
 archievementPrefix = '\n- Product'
 archievementWebPrefix = '\n- Web'
 
 
-//TODO how to load this from project.ls instead? require failed//
-
-projectTemplate =
-  * id: ""
-    "name":
-      zh: ""
-      en: ""
-    logo: ""
-    intro:
-      zh:
-        short: ""
-        medium: ""
-        long: ""
-      en:
-        short: ""
-        medium: ""
-        long: ""
-    category: <[]>
-    tag: <[]>
-    participant: {}
-    tool:
-      * ""
-        ""
-    license:
-      * ""
-        ""
-    homepage: ""
-    achievement:
-      []
-    workspace:
-      []
-    resource:
-      []
-    follower: <[]>
-    story:
-      [{
-        title: ""
-        "url": ""
-      }]
-    related: <[]>
 
 //TODO some real list parsing logic like YAML//
 
 parseMeta = (desc, prefix, isList) ->
-  metaDesc = desc.substring (desc.indexOf prefix)
-  if isList
-     end = (metaDesc.indexOf '\n-', prefix.length)
-     metaDesc = metaDesc.substring (metaDesc.indexOf '\n -' , prefix.length)+1, end
-     metaData = [parseMeta metaDesc, archievementWebPrefix]
-  else
-     end =  (metaDesc.indexOf '\n', prefix.length)
-     if end === -1
-       metaData = metaDesc.substring prefix.length+2
-     else
-       metaData = metaDesc.substring prefix.length+2, end
-  metaData
+  prefixIndex = desc.indexOf prefix
+  if prefixIndex > -1
+    metaDesc = desc.substring (prefixIndex)
+    if isList
+       end = (metaDesc.indexOf '\n-', prefix.length)
+       metaDesc = metaDesc.substring (metaDesc.indexOf '\n -' , prefix.length)+1, end
+       metaData = [parseMeta metaDesc, archievementWebPrefix]
+    else
+       end =  (metaDesc.indexOf '\n', prefix.length)
+       if end === -1
+         metaData = metaDesc.substring prefix.length+2
+       else
+         metaData = metaDesc.substring prefix.length+2, end
+    metaData
 
-parseTrelloCard = (desc) ->
+parseTrelloCard = (data) ->
+  name = data.name
+  desc = data.desc
   start = desc.indexOf cardPrefix
   if start > -1
     desc .= substring start+ cardPrefix.length
     cardData = {}
+    cardData.name = name;
+    cardData.desc = parseMeta desc, descPrefix
+    if typeof cardData.desc !== 'string'
+      cardData.desc =''
     cardData.hackpadUrl = parseMeta desc,hackpadPrefix
     cardData.achievement = parseMeta desc,archievementPrefix,true
     cardData.githubUrl = parseMeta desc,githubPrefix
-    json = [cardData2Project cardData] |> JSON.stringify
-    fs.writeFile "project-list.json", json
+    cardData
+
+
+printCards = (cards) ->
+    data = for card in cards
+      if card
+        project = (cardData2Project card)
+    data = data |> JSON.stringify
+    console.log data
+    fs.writeFile __dirname+"/project-list.json", data
 
 
 /*"achievement": [
@@ -109,7 +86,47 @@ getWorkspace = (data, type,name) ->
 
 
 cardData2Project = (data) ->
-  project ={} <<< projectTemplate
+  //TODO how to load this from project.ls instead? require failed//
+  //Also failed to clone by livescript using {}<<//
+  project =
+    * id: ""
+      "name":
+        zh: ""
+        en: ""
+      logo: ""
+      intro:
+        zh:
+          short: ""
+          medium: ""
+          long: ""
+        en:
+          short: ""
+          medium: ""
+          long: ""
+      category: <[]>
+      tag: <[]>
+      participant: {}
+      tool:
+        * ""
+          ""
+      license:
+        * ""
+          ""
+      homepage: ""
+      achievement:
+        []
+      workspace:
+        []
+      resource:
+        []
+      follower: <[]>
+      story:
+        [{
+          title: ""
+          "url": ""
+        }]
+      related: <[]>
+
   if(data.hackpadUrl)
     project.workspace.push(getWorkspace data, "hackpad")
   if(data.githubUrl)
@@ -119,15 +136,16 @@ cardData2Project = (data) ->
       project.achievement.push({
           "type": "Web",
           "phase": "Production",
-          "url": "https://www.facebook.com/umbrellagroupbuy"
+          "url": achievement
       })
-  project.id=1
-  project.name.zh  = "團撐"
+  project.name.zh  = data.name
+  project.intro.zh.short = data.desc ? data.desc : ''
   project
 
 transform = (data) ->
-  for d in data
-    d.desc |> parseTrelloCard
+  cards = for d in data
+            d |> parseTrelloCard
+  printCards cards
 
 
 
