@@ -8,7 +8,7 @@
   var filter_template_source = '<div class="ui large label" name="{{attribute_id}}">{{attribute_text}}<i class="icon delete"></i></div>';
   var filter_template = Handlebars.compile(filter_template_source);
 
-  var list_template_source ='<article class="column project" id="{{id}}"><div class="wrapper"><a href="{{homepage}}" target="_blank" class="ui image"><img src="{{logo}}"></a><div class="content"><h3 class="ui header"><span class="text">{{name}}</span></h3><p class="description">{{intro}}</p><p class="achievement"></p></div><div class="ui large modal project" name="{{id}}"><a href="{{homepage}}" target="_blank" class="ui image"><img src="{{logo}}"></a><h3 class="ui header">{{name}}</h3><p class="description">{{intro}}</p><p class="achievement"></p><div class="ui divider clear both"></div><div class="ui two column stackable grid"><div class="column"><div class="ui grid"><div class="row"><div class="column four wide">專案分類</div><div class="column twelve wide category"></div></div><div class="row"><div class="column four wide">標籤</div><div class="column twelve wide tag"></div></div><div class="row"><div class="column four wide">介紹</div><div class="column twelve wide story"></div></div><div class="row"><div class="column four wide">相關專案</div><div class="column twelve wide related"></div></div></div></div><div class="column"><div class="ui grid"><div class="row"><div class="column four wide">授權</div><div class="column twelve wide license"></div></div><div class="row"><div class="column four wide">使用工具</div><div class="column twelve wide tool"></div></div><div class="row"><div class="column four wide">資料來源</div><div class="column twelve wide resource"></div></div><div class="row"><div class="column four wide">工作區</div><div class="column twelve wide workspace"></div></div></div></div></div></div></div><div class="hidden text">{{content}}</div></article>';
+  var list_template_source ='<article class="column project" id="{{id}}"><div class="wrapper"><a href="{{homepage}}" target="_blank" class="ui image"><img src="{{logo}}"></a><div class="content"><h3 class="ui header"><span class="text">{{name}}</span>{{#if needHelp}}<span class="ui label teal">徵人</span>{{/if}}</h3><p class="description">{{intro}}</p><p class="achievement"></p></div><div class="ui large modal project" name="{{id}}"><a href="{{homepage}}" target="_blank" class="ui image"><img src="{{logo}}"></a><h3 class="ui header">{{name}}</h3><p class="description">{{intro}}</p><p class="achievement"></p><div class="ui divider clear both"></div><div class="ui two column stackable grid"><div class="column"><div class="ui grid"><div class="row"><div class="column four wide">專案分類</div><div class="column twelve wide category"></div></div><div class="row"><div class="column four wide">標籤</div><div class="column twelve wide tag"></div></div><div class="row"><div class="column four wide">介紹</div><div class="column twelve wide story"></div></div><div class="row"><div class="column four wide">相關專案</div><div class="column twelve wide related"></div></div></div></div><div class="column"><div class="ui grid"><div class="row"><div class="column four wide">授權</div><div class="column twelve wide license"></div></div><div class="row"><div class="column four wide">使用工具</div><div class="column twelve wide tool"></div></div><div class="row"><div class="column four wide">資料來源</div><div class="column twelve wide resource"></div></div><div class="row"><div class="column four wide">工作區</div><div class="column twelve wide workspace"></div></div></div></div></div></div></div><div class="hidden text">{{content}}</div></article>';
   var list_template = Handlebars.compile(list_template_source);
 
   var achievement_template_source = '<a href="{{url}}" target="_blank" class="ui large label"><i class="icon {{icon}}"></i>{{type}}{{phase}}<i class="icon forward mail"></i></a>';
@@ -98,7 +98,8 @@
       var name = project.name.zh || "";
       var intro = project.intro.zh.short || "";
       var content = JSON.stringify(project) || "";
-
+      
+      
       var classes = [];
       var add_classes = function(attribute_type){
         $.each(project[attribute_type], function(index, attribute){
@@ -126,11 +127,16 @@
       if(homepage.length == 0){
         homepage = project.achievement[0].url;
       };
+      
       if(logo.length == 0){
         logo = "http://i.jimmyhub.net/shot/" + homepage;
       };
-
-      var context = {id: id, homepage: homepage, logo: logo, name: name, intro: intro, content: content};
+      
+      var needHelp = false;
+      if(project.needHelp){
+        needHelp=true;
+      }
+      var context = {id: id, homepage: homepage, logo: logo, name: name, intro: intro, content: content, needHelp: needHelp};
       var $list_element = $(list_template(context));
 
       var add_labels = function(label_type, data_array){
@@ -145,6 +151,8 @@
       add_labels("tool", project.tool);
       add_labels("license", project.license);
 
+
+      
       $.each(project.story, function(story_index, story){
         var story_title = story.title;
         var story_url = story.url;
