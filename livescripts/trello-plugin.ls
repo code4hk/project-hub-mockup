@@ -8,6 +8,7 @@ hackpadPrefix = '\n- Hackpad';
 githubPrefix = '\n- Github'
 archievementPrefix = '\n- Product'
 archievementWebPrefix = '- Web'
+archievementAndroidPrefix = '- Android'
 tagPrefix = '\n- Tag'
 
 
@@ -20,7 +21,20 @@ parseMeta = (desc, prefix, isList) ->
     if isList
        end = (metaDesc.indexOf '\n-', prefix.length)
        metaDesc = metaDesc.substring (metaDesc.indexOf '\n -' , prefix.length)+2, end
-       metaData = [parseMeta metaDesc, archievementWebPrefix]
+       web = parseMeta metaDesc, archievementWebPrefix
+       android = parseMeta metaDesc, archievementAndroidPrefix
+       metaData = []
+       if web
+         metaData.push {
+           'type':'web',
+           'url':web
+         }
+       if android
+         metaData.push {
+           'type':'android',
+           'url':android
+         }
+       console.log metaData
     else
        end =  (metaDesc.indexOf '\n', prefix.length)
        if end === -1
@@ -75,9 +89,10 @@ getWorkspace = (data, type,name) ->
 
   if type === 'github'
      githubRegex = /.*www.github.com\/([^\/]*)\/([^\/]*)/ is data[type+'Url']
-     org = githubRegex[1]
-     repo = githubRegex[2]
-     name = org + '/' + repo
+     if githubRegex
+       org = githubRegex[1]
+       repo = githubRegex[2]
+       name = org + '/' + repo
 
   workspace = {
     "type":type,
@@ -138,11 +153,7 @@ cardData2Project = (data) ->
     project.workspace.push(getWorkspace data, "github")
   if (data.achievement)
     for achievement in data.achievement
-      project.achievement.push({
-          "type": "Web",
-          "phase": "Production",
-          "url": achievement
-      })
+      project.achievement.push(achievement)
   project.name.zh  = data.name
   project.intro.zh.short = data.desc ? data.desc : ''
   for label in data.labels
