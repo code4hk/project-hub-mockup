@@ -8,7 +8,7 @@ hackpadPrefix = '\n- Hackpad';
 githubPrefix = '\n- Github'
 archievementPrefix = '\n- Product'
 archievementWebPrefix = '- Web'
-
+tagPrefix = '\n- Tag'
 
 
 //TODO some real list parsing logic like YAML//
@@ -20,7 +20,6 @@ parseMeta = (desc, prefix, isList) ->
     if isList
        end = (metaDesc.indexOf '\n-', prefix.length)
        metaDesc = metaDesc.substring (metaDesc.indexOf '\n -' , prefix.length)+2, end
-       console.log metaDesc
        metaData = [parseMeta metaDesc, archievementWebPrefix]
     else
        end =  (metaDesc.indexOf '\n', prefix.length)
@@ -33,6 +32,7 @@ parseMeta = (desc, prefix, isList) ->
 parseTrelloCard = (data) ->
   name = data.name
   desc = data.desc
+  labels = data.labels
   start = desc.indexOf cardPrefix
   if start > -1
     desc .= substring start+ cardPrefix.length
@@ -44,6 +44,11 @@ parseTrelloCard = (data) ->
     cardData.hackpadUrl = parseMeta desc,hackpadPrefix
     cardData.achievement = parseMeta desc,archievementPrefix,true
     cardData.githubUrl = parseMeta desc,githubPrefix
+    tagString = (parseMeta desc, tagPrefix)
+    tags = []
+    if tagString
+      tags = tagString.split(" ")
+    cardData.labels = labels;
     cardData
 
 
@@ -52,7 +57,6 @@ printCards = (cards) ->
       if card
         project = (cardData2Project card)
     data = data |> JSON.stringify
-    console.log data
     fs.writeFile __dirname+"/project-list.json", data
 
 
@@ -141,13 +145,16 @@ cardData2Project = (data) ->
       })
   project.name.zh  = data.name
   project.intro.zh.short = data.desc ? data.desc : ''
+  for label in data.labels
+    if label.name === 'Helper Wanted'
+      project.needHelp = true
+  console.log project
   project
 
 transform = (data) ->
   cards = for d in data
             d |> parseTrelloCard
   printCards cards
-
 
 
 t.get "/1/boards/544b9e1d9825f631e01b5ede/cards" ((err,data) -> data |>transform)
