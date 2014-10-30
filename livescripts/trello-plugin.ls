@@ -1,6 +1,7 @@
 require! <[node-trello fs]>
+require! '../config'
 //TODO externalize token//
-t = new node-trello "1c646bd5d51e2d7111f552b4729e8763"
+t = new node-trello config.trello.token
 
 cardPrefix = '### ---Code4hk Project Meta---'
 descPrefix = '\n- Desc';
@@ -34,7 +35,6 @@ parseMeta = (desc, prefix, isList) ->
            'type':'android',
            'url':android
          }
-       console.log metaData
     else
        end =  (metaDesc.indexOf '\n', prefix.length)
        if end === -1

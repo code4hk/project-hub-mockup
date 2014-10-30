@@ -7,7 +7,7 @@ block title
 block body
   
   nav#sidebar
-  img(src='http://www.code4.hk/img/logo.png').logo
+    img(src='http://www.code4.hk/img/logo.png').logo
     .ui.menu.no.margin
       .ui.dropdown.item Project Hub
         i.icon.dropdown
@@ -405,7 +405,8 @@ block script
           add_classes("license");
 
           if(homepage.length == 0){
-            homepage = project.achievement[0].url;
+            if(project.achievement.length>0)
+              homepage = project.achievement[0].url;
           };
           
           if(logo.length == 0){
