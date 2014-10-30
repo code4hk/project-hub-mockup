@@ -12,6 +12,11 @@ archievementWebPrefix = '- Web'
 archievementAndroidPrefix = '- Android'
 tagPrefix = '\n- Tag'
 
+ensureUrlWork = (url)->
+  if url.indexOf('http') <0
+    return 'http://'+url
+  return url
+
 
 //TODO some real list parsing logic like YAML//
 
@@ -107,8 +112,7 @@ getWorkspace = (data, type,name) ->
     "url":data[type+'Url']
   }
 
-  if workspace.url.indexOf('http') <0
-    workspace.url = 'http://'+workspace.url
+  workspace.url = ensureUrlWork workspace.url
   workspace
 
 
@@ -160,6 +164,7 @@ cardData2Project = (data) ->
     project.workspace.push(getWorkspace data, "github")
   if (data.achievement)
     for achievement in data.achievement
+      achievement.url = ensureUrlWork achievement.url
       project.achievement.push(achievement)
   project.name.zh  = data.name
   project.intro.zh.short = data.desc ? data.desc : ''

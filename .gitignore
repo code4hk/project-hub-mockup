@@ -21,3 +21,5 @@ _public/
 
 .travis/deploy-key
 .travis/deploy-key.pub
+
+config.json
