@@ -25,14 +25,21 @@ parseMeta = (desc, prefix, isList) ->
        web = parseMeta metaDesc, archievementWebPrefix
        android = parseMeta metaDesc, archievementAndroidPrefix
        metaData = []
+       phase = 'Production'
        if web
+         console.log web
+         if (web.indexOf '[mockup]') >-1
+           console.log 'isMock' +web.indexOf '[mockup]'
+           phase = 'Mockup'
          metaData.push {
            'type':'web',
+           'phase':phase,
            'url':web
          }
        if android
          metaData.push {
            'type':'android',
+           'phase':phase,
            'url':android
          }
     else
