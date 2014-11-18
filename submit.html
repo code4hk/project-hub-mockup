@@ -55,7 +55,7 @@
   var update_url = function(current_view){
     
     //history.pushState( {}, current_view + '| g0v project hub mockup', '/' + current_view );
-    history.pushState( {}, current_view + '| CODE4HK project hub', '/project-hub-mockup/' + current_view );
+    history.pushState( {}, current_view + '| CODE4HK project hub', '' + current_view );
   };
   //$.each( ["submit", "edit", "about"], function(view_index, view_value){
   $.each( ["wiki", "about"], function(view_index, view_value){
@@ -276,7 +276,7 @@
     // for projects filter
     var initialize_pilot = function(){
       var all_projects_count = $("#list>.column").length;
-      var active_classes = ["category-0"];
+      var active_classes = [];
       var active_classes_string = "";
       var active_classes_count = "";
       var target_attribute = "";
@@ -288,7 +288,7 @@
         $("#filter .ui.label").fadeOut();
         $("#index .content .item").removeClass("active");
       }
-      var toggle_filtered_projects = function(){
+      var toggle_filtered_projects = function(target_attribute){
         if( _.contains( active_classes, target_attribute )){
           active_classes = _.without(active_classes, target_attribute);
         }else{
@@ -310,21 +310,26 @@
         }
       }
       $("#count").text(all_projects_count + " projects");
+      function select(target_attribute){
+      $("#filter .ui.label").filter("[name='" + target_attribute + "']").fadeToggle();
+      toggle_filtered_projects(target_attribute);
+      count_filtered_projects();
+      }
       $("#index .content .item").on("click tap", function(){
         $(this).toggleClass("active");
         target_attribute = $(this).attr("name");
-        $("#filter .ui.label").filter("[name='" + target_attribute + "']").fadeToggle();
-        toggle_filtered_projects();
-        count_filtered_projects();
+        select(target_attribute);
       });
+      
       $("#filter .ui.label .delete.icon").on("click tap", function(){
         $(this).parent().fadeOut();
         target_attribute = $(this).parent().attr("name");
         $("#index .content .item").filter("[name='" + target_attribute + "']").removeClass("active");
-        toggle_filtered_projects();
+        toggle_filtered_projects(target_attribute);
         count_filtered_projects();
       });
-
+      
+      
       var active_content_string = "";
       var active_content_count = 0;
       var count_searched_projects = function(){
@@ -348,6 +353,12 @@
         count_searched_projects();
         reset_filter();
       });
+      
+      setTimeout(function(){
+      select("category-0");
+      
+      })
+      
     };
     initialize_pilot();
 
