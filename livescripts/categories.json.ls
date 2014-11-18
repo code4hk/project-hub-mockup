@@ -5,3 +5,4 @@
   "g0v infrastructure"
   "policy wiki"
   "miscellaneous"
+  "hackathon"

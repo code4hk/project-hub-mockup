@@ -70,6 +70,8 @@ parseTrelloCard = (data) ->
     cardData.hackpadUrl = parseMeta desc,hackpadPrefix
     cardData.achievement = parseMeta desc,archievementPrefix,true
     cardData.githubUrl = parseMeta desc,githubPrefix
+    if data.idList === "544b9e262dfa51c43a0ace04"
+       cardData.list = "hackathon"
     tagString = (parseMeta desc, tagPrefix)
     tags = []
     if tagString
@@ -168,6 +170,8 @@ cardData2Project = (data) ->
       project.achievement.push(achievement)
   project.name.zh  = data.name
   project.intro.zh.short = data.desc ? data.desc : ''
+  if (data.list === "hackathon")
+     project.category.push("hackathon")
   for label in data.labels
     if label.name === 'Helper Wanted'
       project.needHelp = true
@@ -178,6 +182,8 @@ transform = (data) ->
   cards = for d in data
             d |> parseTrelloCard
   printCards cards
+
+//TODO Logic to map particular list into category//
 
 
 t.get "/1/boards/544b9e1d9825f631e01b5ede/cards" ((err,data) -> data |>transform)
