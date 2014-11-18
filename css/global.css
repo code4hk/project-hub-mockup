@@ -66,7 +66,7 @@ a, a:link {
 }
 #sidebar #index {
   position: absolute;
-  top: 6rem;
+  top: 10rem;
   bottom: 0;
   left: 0;
   right: 0;
@@ -193,6 +193,10 @@ a, a:link {
   width: 100%;
   height: 100%;
   border: none;
+}
+
+.logo {
+  width: 15rem;
 }
 
 /*# sourceMappingURL=global.css.map */
