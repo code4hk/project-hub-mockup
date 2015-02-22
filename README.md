@@ -1,6 +1,11 @@
 Code4HK project hub
 - based on g0v project hub
 
+1. Update project list at trello
+1. lsc trello-plugin.ls
+1. push to master
+
+
 license: CC0
 
 Development
